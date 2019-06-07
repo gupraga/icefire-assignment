@@ -3,6 +3,7 @@ package com.icefire.assignment.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,14 +23,14 @@ public class InformationController {
 	InformationService informationService;
 	
 	@RequestMapping(method = RequestMethod.POST, path = "/create")
-	public Information createInformation(@RequestBody Information information) {
+	public Information createInformation(@RequestBody Information information, Authentication authentication) {
 		return informationService.createInformation(information);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, path = "/list")
-	public List<Information> findAllInformations(@AuthenticationPrincipal UserDetails userDetails) {
-		// Make by user
-		return informationService.findAllInformations();
+	public List<Information> findAllInformationsByUser(Authentication authentication) {
+		// TODO PAROU AQUI, PARTE IMPORTANTE PARA PROXIMO DEV
+		return informationService.findAllInformationsByUser(authentication.getPrincipal().toString());
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE, path = "/{id}")

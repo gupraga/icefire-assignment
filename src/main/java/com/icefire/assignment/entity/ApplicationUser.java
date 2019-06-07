@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -14,7 +15,7 @@ public class ApplicationUser {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column
+	@Column(unique = true)
 	@NotNull
 	private String username;
 	
@@ -25,6 +26,14 @@ public class ApplicationUser {
 	@Column
 	@NotNull
 	private String name;
+	
+	@Lob
+	@Column
+	private String publicKey;
+	
+	@Lob
+	@Column
+	private String privateKey;
 
 	public Long getId() {
 		return id;
@@ -56,5 +65,21 @@ public class ApplicationUser {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPrivateKey() {
+		return privateKey;
+	}
+
+	public void setPrivateKey(String privateKey) {
+		this.privateKey = privateKey;
+	}
+
+	public String getPublicKey() {
+		return publicKey;
+	}
+
+	public void setPublicKey(String publicKey) {
+		this.publicKey = publicKey;
 	}
 }

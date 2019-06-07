@@ -5,7 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Information {
@@ -14,11 +18,15 @@ public class Information {
 	private Long id;
 	
 	@Column
-	@NotNull
+	@Lob
 	private String informationSecured;
 
-	/*@OneToOne(mappedBy = "id")
-	private ApplicationUser user;*/
+	@Transient
+	private String information;
+	
+	@JsonIgnore
+	@ManyToOne(targetEntity = ApplicationUser.class)
+	private ApplicationUser user;
 	
 	public Long getId() {
 		return id;
@@ -35,5 +43,20 @@ public class Information {
 	public void setInformationSecured(String informationSecured) {
 		this.informationSecured = informationSecured;
 	}
-	
+
+	public ApplicationUser getUser() {
+		return user;
+	}
+
+	public void setUser(ApplicationUser user) {
+		this.user = user;
+	}
+
+	public String getInformation() {
+		return information;
+	}
+
+	public void setInformation(String information) {
+		this.information = information;
+	}
 }
