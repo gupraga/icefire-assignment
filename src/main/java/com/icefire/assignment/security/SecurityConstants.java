@@ -2,7 +2,7 @@ package com.icefire.assignment.security;
 
 public class SecurityConstants {
 
-	public static final String SECRET = "NotTooSecret";
+	public static final String SECRET = "Secrets";
 	public static final String HEADER_PREFIX = "Authorization";
 	public static final String TOKEN_PREFIX = "Bearer ";
 	public static final Long EXPIRATION_TIME = 86400000L;

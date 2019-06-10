@@ -28,11 +28,11 @@ public class ApplicationUser {
 	private String name;
 	
 	@Lob
-	@Column
+	@Column(unique = true)
 	private String publicKey;
 	
 	@Lob
-	@Column
+	@Column(unique = true)
 	private String privateKey;
 
 	public Long getId() {

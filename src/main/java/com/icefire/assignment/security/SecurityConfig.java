@@ -8,12 +8,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icefire.assignment.service.CustomUserDetailsService;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
+	@Autowired private ObjectMapper objectMapper;
+	
 	@Autowired
 	CustomUserDetailsService customUserDetailsService;
 	
@@ -26,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable()
 		.authorizeRequests().antMatchers("*/api/**").hasRole("ADMIN").and()
-		.addFilter(new JWTAuthenticationFilter(authenticationManager()))
+		.addFilter(new JWTAuthenticationFilter(objectMapper, authenticationManager()))
 		.addFilter(new JWTAuthorizationFilter(authenticationManager(), customUserDetailsService));
 	}
 

@@ -2,6 +2,8 @@ package com.icefire.assignment.security;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -23,9 +25,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 
+	private final ObjectMapper mapper;
 	private AuthenticationManager authenticationManager;
 
-	public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+	public JWTAuthenticationFilter(final ObjectMapper mapper, AuthenticationManager authenticationManager) {
+		this.mapper = mapper;
 		this.authenticationManager = authenticationManager; 
 	}
 	
@@ -44,13 +48,21 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
+		Long expirationTime = System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME;
 		String username = ((User)authResult.getPrincipal()).getUsername();
 		String token = Jwts.builder().setSubject(username)
-				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+				.setExpiration(new Date(expirationTime))
 				.signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET)
 				.compact();
-		response.addHeader(SecurityConstants.HEADER_PREFIX, SecurityConstants.TOKEN_PREFIX+token);
 		
+		Map<String, String> tokenMap = new HashMap<String, String>();
+        tokenMap.put("token", token);
+        tokenMap.put("expiration", expirationTime.toString());
+        tokenMap.put("username", username);
+        
+        mapper.writeValue(response.getWriter(), tokenMap);
+        
+		response.addHeader(SecurityConstants.HEADER_PREFIX, SecurityConstants.TOKEN_PREFIX+token);
 	}
 	
 	
